@@ -1,0 +1,14 @@
+[package]
+name = "adventofcode-2021"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name="sol-01-1"
+path="01/01-1.rs"
+
+[[bin]]
+name="sol-01-2"
+path="01/01-2.rs"
+
+[dependencies]
