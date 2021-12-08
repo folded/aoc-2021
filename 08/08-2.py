@@ -1,4 +1,5 @@
 import sys
+import itertools
 
 canonical = {
     1: frozenset('cf'),
@@ -12,10 +13,8 @@ canonical = {
     9: frozenset('abcdfg'),
     8: frozenset('abcdefg'),
 }
-
 canonical_inv = {v: k for k, v in canonical.items()}
-
-ALL = frozenset('abcdefg')
+all_digits = frozenset(canonical.values())
 
 
 def parse_row(line):
@@ -25,43 +24,17 @@ def parse_row(line):
   return segments, display
 
 
-def is_digit_consistent(digit, value):
-  if len(digit) != len(canonical[value]):
-    return False
-  determined = set(d for d in digit if d.islower())
-  return determined.issubset(canonical[value])
-
-
 def is_consistent(segments, mapping):
-  for segment in segments:
-    mapped = ''.join(mapping.get(s, s.upper()) for s in segment)
-    if not any(is_digit_consistent(mapped, i) for i in range(10)):
-      return False
-  return True
-
-
-def generate_assignment_order(segments):
-  order = ''
-  for segment in sorted(segments, key=lambda s: (len(s), s)):
-    for s in segment:
-      if s not in order:
-        order += s
-  return order
-
-
-def _make_mapping(segments, order, mapping):
-  if len(mapping) == 7:
-    yield mapping
-  else:
-    f = order[0]
-    for t in ALL - set(mapping.values()):
-      temp = {**mapping, **{f: t}}
-      if is_consistent(segments, temp):
-        yield from _make_mapping(segments, order[1:], temp)
+  return all(
+      frozenset(mapping[s] for s in segment) in all_digits
+      for segment in segments)
 
 
 def make_mapping(segments):
-  return next(_make_mapping(segments, generate_assignment_order(segments), {}))
+  for perm in itertools.permutations('abcdefg', 7):
+    mapping = dict(zip(perm, 'abcdefg'))
+    if is_consistent(segments, mapping):
+      return mapping
 
 
 inputs = [parse_row(line) for line in sys.stdin]
