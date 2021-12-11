@@ -15,6 +15,7 @@ def flash(mtx):
                          axis=(-2, -1))
     mtx[mask] = -1000
     count += c
+  mtx[mtx < 0] = 0
   return count
 
 
@@ -22,6 +23,5 @@ count = 0
 for i in range(100):
   mtx += 1
   count += flash(mtx)
-  mtx[mtx < 0] = 0
 
 print(count)
