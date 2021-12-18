@@ -90,5 +90,7 @@ print(magnitude(a))
 
 print(
     max(
-        max(magnitude(add(a, b)), magnitude(add(b, a)))
-        for a, b in itertools.product(numbers, numbers) if a is not b))
+        magnitude(add(a, b))
+        for a, b in itertools.product(numbers, numbers)
+        if a is not b
+    ))
